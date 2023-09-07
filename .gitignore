@@ -2,6 +2,8 @@
 *.o
 *.a
 *.so
+*.xml
+*.imi
 
 # Folders
 _obj/
@@ -23,3 +25,6 @@ vendor/
 
 # Dependency directories (remove the comment below to include it)
 # /vendor/
+
+.env
+launch.json
