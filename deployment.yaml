@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: parking-consumer-app-config
+data:
+  DB_USERNAME: "postgres"
+  DB_PASSWORD: "admin"
+  RABBITMQ_QUEUE: "zones"
+  RABBITMQ_URL: "amqp://admin:admin@rabbitmq-service"
+  DB_NAME: "parking"
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_SSLMODE: "disable"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parking-consumer-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: parking-consumer-app
+  template:
+    metadata:
+      labels:
+        app: parking-consumer-app
+    spec:
+      containers:
+        - name: parking-consumer-app
+          image: farazff/parking-rabbitmq:1.0.3
+          envFrom:
+            - configMapRef:
+                name: parking-consumer-app-config
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+              ephemeral-storage: "1Gi"
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
+              ephemeral-storage: "1Gi"

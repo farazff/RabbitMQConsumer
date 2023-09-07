@@ -1,9 +1,0 @@
-FROM golang:1.17 AS build
-WORKDIR /app
-COPY . .
-RUN go build -o my-rabbitmq-consumer
-
-FROM alpine:latest
-WORKDIR /app
-COPY --from=build /app/my-rabbitmq-consumer /app/
-CMD ["./my-rabbitmq-consumer"]

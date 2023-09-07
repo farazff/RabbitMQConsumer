@@ -4,8 +4,8 @@ go 1.20
 
 require (
 	github.com/jinzhu/gorm v1.9.16
+	github.com/rabbitmq/amqp091-go v1.8.1
 	github.com/spf13/viper v1.16.0
-	github.com/streadway/amqp v1.1.0
 )
 
 require (

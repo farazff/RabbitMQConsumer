@@ -8,8 +8,8 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/spf13/viper"
-	"github.com/streadway/amqp"
 )
 
 type Message struct {
@@ -18,8 +18,8 @@ type Message struct {
 }
 
 type Zone struct {
-	ID                int
-	RemainingCapacity int
+	ID               int
+	RemainedCapacity int
 }
 
 func main() {
@@ -93,6 +93,8 @@ func main() {
 		for msg := range messages {
 			var message Message
 			err := json.Unmarshal(msg.Body, &message)
+			fmt.Printf(message.Type)
+			fmt.Println("--------")
 			if err != nil {
 				log.Println("Failed to unmarshal message:", err)
 				continue
@@ -103,13 +105,13 @@ func main() {
 			db.First(&zone, message.ZoneID)
 
 			if message.Type == "enter" {
-				zone.RemainingCapacity--
+				zone.RemainedCapacity--
 			} else if message.Type == "exit" {
-				zone.RemainingCapacity++
+				zone.RemainedCapacity++
 			}
 
 			db.Save(&zone)
-			fmt.Printf("Updated zone %d - Remaining capacity: %d\n", zone.ID, zone.RemainingCapacity)
+			fmt.Printf("Updated zone %d - Remaining capacity: %d\n", zone.ID, zone.RemainedCapacity)
 		}
 	}
 }
